@@ -19,18 +19,19 @@
 
   /* NAV */
   nav {
-    background: #2E3192;
+    background: #1E1145;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 24px;
-    height: 52px;
+    padding: 0 28px;
+    height: 56px;
     flex-shrink: 0;
   }
-  nav .brand { display: flex; align-items: center; gap: 8px; color: #fff; font-weight: 800; font-size: 18px; }
-  nav .brand svg { width: 28px; height: 28px; }
-  nav .org { color: #fff; font-size: 14px; font-weight: 600; letter-spacing: 0.04em; }
-  nav .avatar { width: 32px; height: 32px; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; color: #2E3192; font-size: 14px; }
+  nav .brand { display: flex; align-items: center; gap: 8px; color: #fff; font-weight: 800; font-size: 17px; }
+  nav .brand svg { width: 26px; height: 26px; }
+  nav .org { color: #fff; font-size: 14px; font-weight: 700; letter-spacing: 0.08em; position: absolute; left: 50%; transform: translateX(-50%); }
+  nav { position: relative; }
+  nav .avatar { width: 34px; height: 34px; border-radius: 50%; background: transparent; border: 2px solid #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #fff; font-size: 14px; }
 
   /* MAIN */
   main {
@@ -38,44 +39,37 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 52px 24px 40px;
-    max-width: 780px;
+    padding: 56px 24px 48px;
+    max-width: 860px;
     margin: 0 auto;
     width: 100%;
   }
 
   h1 {
-    font-size: clamp(22px, 4vw, 34px);
+    font-size: clamp(24px, 4vw, 36px);
     font-weight: 800;
-    color: #2E3192;
+    color: #1E1145;
     text-align: center;
     line-height: 1.25;
-    margin-bottom: 8px;
-  }
-
-  .subtitle {
-    font-size: 15px;
-    color: #666;
-    text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: 48px;
   }
 
   /* GLOBAL PROGRESS BAR */
   .global-progress-wrap {
     width: 100%;
-    margin-bottom: 36px;
+    margin-bottom: 10px;
   }
   .global-bar-track {
     width: 100%;
-    height: 8px;
-    background: #EBEBF5;
+    height: 7px;
+    background: #E8E4F0;
     border-radius: 99px;
     overflow: hidden;
   }
   .global-bar-fill {
     height: 100%;
     width: 0%;
-    background: linear-gradient(90deg, #2E3192, #6C63FF);
+    background: linear-gradient(90deg, #1E1145, #7C3AED);
     border-radius: 99px;
     transition: width 0.4s ease;
   }
@@ -84,68 +78,91 @@
     justify-content: space-between;
     margin-top: 8px;
     font-size: 13px;
-    color: #888;
+    color: #999;
   }
-  .global-label .status-text { color: #2E3192; font-weight: 700; }
+  .global-label .status-text { color: #1E1145; font-weight: 700; }
+
+  /* CARDS WRAPPER */
+  .cards-wrapper {
+    width: 100%;
+    background: #F4F4F7;
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 36px;
+  }
 
   /* CARDS GRID */
   .cards-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
+    gap: 14px;
     width: 100%;
-    margin-bottom: 36px;
   }
 
   .card {
-    background: #F7F7FB;
-    border-radius: 16px;
-    padding: 20px 16px 16px;
-    border: 2px solid transparent;
-    transition: border-color 0.3s, background 0.3s;
-    min-height: 130px;
+    background: #fff;
+    border-radius: 14px;
+    padding: 20px 16px 0;
+    border: 1.5px solid #E8E4F0;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    min-height: 140px;
     position: relative;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
   }
+
+  /* Purple bottom accent bar */
+  .card::after {
+    content: '';
+    display: block;
+    height: 4px;
+    background: #E8E4F0;
+    border-radius: 0 0 14px 14px;
+    margin-top: auto;
+    transition: background 0.4s;
+  }
+  .card.active::after { background: linear-gradient(90deg, #7C3AED, #1E1145); }
+  .card.done::after  { background: #1E1145; }
+
   .card.active {
-    background: #fff;
-    border-color: #6C63FF;
-    box-shadow: 0 4px 20px rgba(108, 99, 255, 0.12);
+    border-color: #C4B5FD;
+    box-shadow: 0 4px 18px rgba(124, 58, 237, 0.1);
   }
   .card.done {
-    background: #fff;
-    border-color: #2E3192;
+    border-color: #C4B5FD;
   }
 
   .card-icon {
     font-size: 26px;
     margin-bottom: 10px;
     display: block;
-    filter: grayscale(1) opacity(0.3);
+    filter: grayscale(1) opacity(0.25);
     transition: filter 0.4s;
   }
   .card.active .card-icon,
   .card.done .card-icon { filter: grayscale(0) opacity(1); }
 
   .card-title {
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 700;
-    color: #999;
-    margin-bottom: 6px;
+    color: #bbb;
+    margin-bottom: 10px;
     transition: color 0.3s;
   }
-  .card.active .card-title { color: #2E3192; }
-  .card.done .card-title { color: #2E3192; }
+  .card.active .card-title,
+  .card.done .card-title { color: #1E1145; }
 
   /* Skeleton lines */
   .skeleton-line {
     height: 8px;
     border-radius: 4px;
-    background: linear-gradient(90deg, #e8e8f0 25%, #d4d4e8 50%, #e8e8f0 75%);
-    background-size: 200% 100%;
+    background: #EBEBF5;
     margin-bottom: 6px;
   }
   .card.active .skeleton-line {
+    background: linear-gradient(90deg, #ede9f8 25%, #d8d0f2 50%, #ede9f8 75%);
+    background-size: 200% 100%;
     animation: shimmer 1.2s infinite;
   }
   .card.done .skeleton-line {
@@ -155,7 +172,7 @@
   .skeleton-line.short { width: 60%; }
 
   @keyframes shimmer {
-    0% { background-position: 200% 0; }
+    0%   { background-position: 200% 0; }
     100% { background-position: -200% 0; }
   }
 
@@ -165,7 +182,7 @@
     top: 14px; right: 14px;
     width: 22px; height: 22px;
     border-radius: 50%;
-    background: #2E3192;
+    background: #1E1145;
     display: flex; align-items: center; justify-content: center;
     opacity: 0;
     transform: scale(0.5);
@@ -179,8 +196,8 @@
     position: absolute;
     top: 14px; right: 14px;
     width: 22px; height: 22px;
-    border: 2.5px solid #EBEBF5;
-    border-top-color: #6C63FF;
+    border: 2.5px solid #E8E4F0;
+    border-top-color: #7C3AED;
     border-radius: 50%;
     opacity: 0;
     animation: spin 0.9s linear infinite;
@@ -197,22 +214,22 @@
     pointer-events: none;
   }
   .final-msg.visible { opacity: 1; transform: translateY(0); pointer-events: all; }
-  .final-msg p { color: #555; font-size: 15px; margin-bottom: 20px; }
+  .final-msg p { color: #555; font-size: 15px; margin-bottom: 24px; }
 
   .btn-continue {
     display: inline-block;
-    background: #2E3192;
+    background: #1E1145;
     color: #fff;
     font-family: inherit;
-    font-size: 16px;
+    font-size: 17px;
     font-weight: 700;
-    padding: 14px 48px;
+    padding: 16px 56px;
     border-radius: 99px;
     border: none;
     cursor: pointer;
     transition: background 0.2s, transform 0.1s;
   }
-  .btn-continue:hover { background: #1a1d6e; transform: translateY(-1px); }
+  .btn-continue:hover { background: #2d1b69; transform: translateY(-1px); }
 </style>
 </head>
 <body>
@@ -232,7 +249,6 @@
 
 <main>
   <h1>Hang tight — we're building<br>your Personal Insights.</h1>
-  <p class="subtitle">This usually takes about 25 seconds. Here's what we're putting together for you.</p>
 
   <!-- GLOBAL PROGRESS BAR -->
   <div class="global-progress-wrap">
@@ -246,62 +262,64 @@
   </div>
 
   <!-- CARDS GRID -->
-  <div class="cards-grid" id="cardsGrid">
+  <div class="cards-wrapper">
+    <div class="cards-grid" id="cardsGrid">
 
-    <div class="card" id="card-0">
-      <span class="card-icon">😊</span>
-      <div class="card-title">Financial Joy</div>
-      <div class="skeleton-line"></div>
-      <div class="skeleton-line short"></div>
-      <div class="spinner"></div>
-      <div class="check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+      <div class="card" id="card-0">
+        <span class="card-icon">😊</span>
+        <div class="card-title">Financial Joy</div>
+        <div class="skeleton-line"></div>
+        <div class="skeleton-line short"></div>
+        <div class="spinner"></div>
+        <div class="check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+      </div>
+
+      <div class="card" id="card-1">
+        <span class="card-icon">🛡️</span>
+        <div class="card-title">Confidence</div>
+        <div class="skeleton-line"></div>
+        <div class="skeleton-line short"></div>
+        <div class="spinner"></div>
+        <div class="check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+      </div>
+
+      <div class="card" id="card-2">
+        <span class="card-icon">🌤️</span>
+        <div class="card-title">Outlook</div>
+        <div class="skeleton-line"></div>
+        <div class="skeleton-line short"></div>
+        <div class="spinner"></div>
+        <div class="check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+      </div>
+
+      <div class="card" id="card-3">
+        <span class="card-icon">🔭</span>
+        <div class="card-title">Vision of the Future</div>
+        <div class="skeleton-line"></div>
+        <div class="skeleton-line short"></div>
+        <div class="spinner"></div>
+        <div class="check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+      </div>
+
+      <div class="card" id="card-4">
+        <span class="card-icon">🎯</span>
+        <div class="card-title">Goals</div>
+        <div class="skeleton-line"></div>
+        <div class="skeleton-line short"></div>
+        <div class="spinner"></div>
+        <div class="check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+      </div>
+
+      <div class="card" id="card-5">
+        <span class="card-icon">⚡</span>
+        <div class="card-title">Financial Profile</div>
+        <div class="skeleton-line"></div>
+        <div class="skeleton-line short"></div>
+        <div class="spinner"></div>
+        <div class="check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+      </div>
+
     </div>
-
-    <div class="card" id="card-1">
-      <span class="card-icon">🛡️</span>
-      <div class="card-title">Confidence</div>
-      <div class="skeleton-line"></div>
-      <div class="skeleton-line short"></div>
-      <div class="spinner"></div>
-      <div class="check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
-    </div>
-
-    <div class="card" id="card-2">
-      <span class="card-icon">🌤️</span>
-      <div class="card-title">Outlook</div>
-      <div class="skeleton-line"></div>
-      <div class="skeleton-line short"></div>
-      <div class="spinner"></div>
-      <div class="check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
-    </div>
-
-    <div class="card" id="card-3">
-      <span class="card-icon">🔭</span>
-      <div class="card-title">Vision of the Future</div>
-      <div class="skeleton-line"></div>
-      <div class="skeleton-line short"></div>
-      <div class="spinner"></div>
-      <div class="check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
-    </div>
-
-    <div class="card" id="card-4">
-      <span class="card-icon">🎯</span>
-      <div class="card-title">Goals</div>
-      <div class="skeleton-line"></div>
-      <div class="skeleton-line short"></div>
-      <div class="spinner"></div>
-      <div class="check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
-    </div>
-
-    <div class="card" id="card-5">
-      <span class="card-icon">⚡</span>
-      <div class="card-title">Financial Profile</div>
-      <div class="skeleton-line"></div>
-      <div class="skeleton-line short"></div>
-      <div class="spinner"></div>
-      <div class="check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
-    </div>
-
   </div>
 
   <!-- FINAL CTA -->
@@ -312,7 +330,7 @@
 </main>
 
 <script>
-  const TOTAL_DURATION = 25000; // 25s
+  const TOTAL_DURATION = 25000;
   const cards = [
     { id: 'card-0', label: 'Loading financial joy…' },
     { id: 'card-1', label: 'Loading confidence…' },
@@ -322,7 +340,6 @@
     { id: 'card-5', label: 'Generating your financial profile…' },
   ];
   const N = cards.length;
-  // Each card gets roughly equal time but last one finishes at 100%
   const cardDuration = TOTAL_DURATION / N;
 
   const globalBar = document.getElementById('globalBar');
@@ -333,7 +350,6 @@
   let startTime = null;
   let activeIdx = 0;
 
-  // Activate first card immediately
   document.getElementById(cards[0].id).classList.add('active');
   statusText.textContent = cards[0].label;
 
@@ -346,17 +362,14 @@
     globalBar.style.width = displayPct + '%';
     pctLabel.textContent = displayPct + '%';
 
-    // Which card should be active?
     const targetIdx = Math.min(Math.floor(elapsed / cardDuration), N - 1);
 
     if (targetIdx > activeIdx) {
-      // Complete previous cards
       for (let i = activeIdx; i < targetIdx; i++) {
         const el = document.getElementById(cards[i].id);
         el.classList.remove('active');
         el.classList.add('done');
       }
-      // Activate new card
       activeIdx = targetIdx;
       document.getElementById(cards[activeIdx].id).classList.add('active');
       statusText.textContent = cards[activeIdx].label;
@@ -365,7 +378,6 @@
     if (rawPct < 1) {
       requestAnimationFrame(tick);
     } else {
-      // Done
       document.getElementById(cards[N-1].id).classList.remove('active');
       document.getElementById(cards[N-1].id).classList.add('done');
       statusText.textContent = 'Your insights are ready!';
