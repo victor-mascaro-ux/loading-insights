@@ -297,6 +297,20 @@
   }
   .skip-link:hover { color: #7C3AED; }
   body.complete .skip-link { display: none; }
+
+  /* MOBILE — single column, emoji to the right of the title */
+  @media (max-width: 640px) {
+    .cards-grid { grid-template-columns: 1fr; }
+    .card { min-height: 0; padding: 18px 18px 22px; }
+    .card-icon {
+      position: absolute;
+      top: 14px;
+      right: 48px;
+      font-size: 24px;
+      margin-bottom: 0;
+    }
+    .card-title { margin-right: 84px; margin-bottom: 8px; }
+  }
 </style>
 </head>
 <body>
