@@ -250,6 +250,23 @@
   }
   .btn-continue:hover { background: #2d1b69; transform: translateY(-1px); }
 
+  /* discreet skip link */
+  .skip-link {
+    position: fixed;
+    bottom: 18px;
+    right: 22px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #bbb;
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-family: inherit;
+    transition: color 0.2s;
+  }
+  .skip-link:hover { color: #7C3AED; }
+  body.complete .skip-link { display: none; }
+
   @media (max-width: 760px) {
     .content-row { flex-direction: column; gap: 36px; }
     .steps { min-width: 0; width: 100%; max-width: 360px; }
@@ -355,6 +372,8 @@
   <div class="final-msg" id="finalMsg">
     <button class="btn-continue" onclick="window.location.href='version-a.html'">Continue</button>
   </div>
+
+  <button class="skip-link" onclick="skipAhead()">Skip &rarr;</button>
 </main>
 
 <script>
@@ -396,12 +415,17 @@
 
   let startTime = null;
   let activeIdx = 0;
+  let skipRequested = false;
+
+  function skipAhead() { skipRequested = true; }
+  document.addEventListener('keydown', e => { if (e.key === 'ArrowRight') skipAhead(); });
 
   document.getElementById(steps[0].id).classList.add('active');
   ringSub.textContent = steps[0].label;
 
   function tick(ts) {
     if (!startTime) startTime = ts;
+    if (skipRequested) startTime = ts - TOTAL_DURATION;
     const elapsed = ts - startTime;
     const rawPct = Math.min(elapsed / TOTAL_DURATION, 1);
     const displayPct = Math.round(rawPct * 100);
@@ -431,6 +455,7 @@
       ringSub.textContent = 'Ready!';
       ringPct.textContent = '100%';
       document.getElementById('pageTitle').textContent = 'Your Personal Insights are ready.';
+      document.body.classList.add('complete');
       finalMsg.classList.add('visible');
     }
   }
