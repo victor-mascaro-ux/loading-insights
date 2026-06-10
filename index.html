@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Knomee – Generating Your Profile</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: #fff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* NAV */
+  nav {
+    background: #2E3192;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    height: 52px;
+    flex-shrink: 0;
+  }
+  nav .brand { display: flex; align-items: center; gap: 8px; color: #fff; font-weight: 800; font-size: 18px; }
+  nav .brand svg { width: 28px; height: 28px; }
+  nav .org { color: #fff; font-size: 14px; font-weight: 600; letter-spacing: 0.04em; }
+  nav .avatar { width: 32px; height: 32px; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; color: #2E3192; font-size: 14px; }
+
+  /* MAIN */
+  main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 52px 24px 40px;
+    max-width: 780px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  h1 {
+    font-size: clamp(22px, 4vw, 34px);
+    font-weight: 800;
+    color: #2E3192;
+    text-align: center;
+    line-height: 1.25;
+    margin-bottom: 8px;
+  }
+
+  .subtitle {
+    font-size: 15px;
+    color: #666;
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  /* GLOBAL PROGRESS BAR */
+  .global-progress-wrap {
+    width: 100%;
+    margin-bottom: 36px;
+  }
+  .global-bar-track {
+    width: 100%;
+    height: 8px;
+    background: #EBEBF5;
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .global-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #2E3192, #6C63FF);
+    border-radius: 99px;
+    transition: width 0.4s ease;
+  }
+  .global-label {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    font-size: 13px;
+    color: #888;
+  }
+  .global-label .status-text { color: #2E3192; font-weight: 700; }
+
+  /* CARDS GRID */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    width: 100%;
+    margin-bottom: 36px;
+  }
+
+  .card {
+    background: #F7F7FB;
+    border-radius: 16px;
+    padding: 20px 16px 16px;
+    border: 2px solid transparent;
+    transition: border-color 0.3s, background 0.3s;
+    min-height: 130px;
+    position: relative;
+    overflow: hidden;
+  }
+  .card.active {
+    background: #fff;
+    border-color: #6C63FF;
+    box-shadow: 0 4px 20px rgba(108, 99, 255, 0.12);
+  }
+  .card.done {
+    background: #fff;
+    border-color: #2E3192;
+  }
+
+  .card-icon {
+    font-size: 26px;
+    margin-bottom: 10px;
+    display: block;
+    filter: grayscale(1) opacity(0.3);
+    transition: filter 0.4s;
+  }
+  .card.active .card-icon,
+  .card.done .card-icon { filter: grayscale(0) opacity(1); }
+
+  .card-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #999;
+    margin-bottom: 6px;
+    transition: color 0.3s;
+  }
+  .card.active .card-title { color: #2E3192; }
+  .card.done .card-title { color: #2E3192; }
+
+  /* Skeleton lines */
+  .skeleton-line {
+    height: 8px;
+    border-radius: 4px;
+    background: linear-gradient(90deg, #e8e8f0 25%, #d4d4e8 50%, #e8e8f0 75%);
+    background-size: 200% 100%;
+    margin-bottom: 6px;
+  }
+  .card.active .skeleton-line {
+    animation: shimmer 1.2s infinite;
+  }
+  .card.done .skeleton-line {
+    background: #EBEBF5;
+    animation: none;
+  }
+  .skeleton-line.short { width: 60%; }
+
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  /* check mark */
+  .check {
+    position: absolute;
+    top: 14px; right: 14px;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: #2E3192;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: opacity 0.3s, transform 0.3s;
+  }
+  .card.done .check { opacity: 1; transform: scale(1); }
+  .check svg { width: 12px; height: 12px; stroke: #fff; fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* spinner ring on active card */
+  .spinner {
+    position: absolute;
+    top: 14px; right: 14px;
+    width: 22px; height: 22px;
+    border: 2.5px solid #EBEBF5;
+    border-top-color: #6C63FF;
+    border-radius: 50%;
+    opacity: 0;
+    animation: spin 0.9s linear infinite;
+  }
+  .card.active .spinner { opacity: 1; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* FINAL MESSAGE */
+  .final-msg {
+    text-align: center;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.6s, transform 0.6s;
+    pointer-events: none;
+  }
+  .final-msg.visible { opacity: 1; transform: translateY(0); pointer-events: all; }
+  .final-msg p { color: #555; font-size: 15px; margin-bottom: 20px; }
+
+  .btn-continue {
+    display: inline-block;
+    background: #2E3192;
+    color: #fff;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 700;
+    padding: 14px 48px;
+    border-radius: 99px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+  }
+  .btn-continue:hover { background: #1a1d6e; transform: translateY(-1px); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="brand">
+    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="16" cy="16" r="14" stroke="white" stroke-width="2"/>
+      <path d="M16 8 C18 12, 22 13, 20 16 C18 19, 13 18, 14 22" stroke="white" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+    </svg>
+    knomee
+  </div>
+  <div class="org">ACME ADVISORS</div>
+  <div class="avatar">A</div>
+</nav>
+
+<main>
+  <h1>Hang tight — we're building<br>your Personal Insights.</h1>
+  <p class="subtitle">This usually takes about 25 seconds. Here's what we're putting together for you.</p>
+
+  <!-- GLOBAL PROGRESS BAR -->
+  <div class="global-progress-wrap">
+    <div class="global-bar-track">
+      <div class="global-bar-fill" id="globalBar"></div>
+    </div>
+    <div class="global-label">
+      <span class="status-text" id="statusText">Starting…</span>
+      <span id="pctLabel">0%</span>
+    </div>
+  </div>
+
+  <!-- CARDS GRID -->
+  <div class="cards-grid" id="cardsGrid">
+
+    <div class="card" id="card-0">
+      <span class="card-icon">😊</span>
+      <div class="card-title">Financial Joy</div>
+      <div class="skeleton-line"></div>
+      <div class="skeleton-line short"></div>
+      <div class="spinner"></div>
+      <div class="check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+    </div>
+
+    <div class="card" id="card-1">
+      <span class="card-icon">🛡️</span>
+      <div class="card-title">Confidence</div>
+      <div class="skeleton-line"></div>
+      <div class="skeleton-line short"></div>
+      <div class="spinner"></div>
+      <div class="check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+    </div>
+
+    <div class="card" id="card-2">
+      <span class="card-icon">🌤️</span>
+      <div class="card-title">Outlook</div>
+      <div class="skeleton-line"></div>
+      <div class="skeleton-line short"></div>
+      <div class="spinner"></div>
+      <div class="check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+    </div>
+
+    <div class="card" id="card-3">
+      <span class="card-icon">🔭</span>
+      <div class="card-title">Vision of the Future</div>
+      <div class="skeleton-line"></div>
+      <div class="skeleton-line short"></div>
+      <div class="spinner"></div>
+      <div class="check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+    </div>
+
+    <div class="card" id="card-4">
+      <span class="card-icon">🎯</span>
+      <div class="card-title">Goals</div>
+      <div class="skeleton-line"></div>
+      <div class="skeleton-line short"></div>
+      <div class="spinner"></div>
+      <div class="check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+    </div>
+
+    <div class="card" id="card-5">
+      <span class="card-icon">⚡</span>
+      <div class="card-title">Financial Profile</div>
+      <div class="skeleton-line"></div>
+      <div class="skeleton-line short"></div>
+      <div class="spinner"></div>
+      <div class="check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
+    </div>
+
+  </div>
+
+  <!-- FINAL CTA -->
+  <div class="final-msg" id="finalMsg">
+    <p>Your Personal Insights are ready. 🎉</p>
+    <button class="btn-continue">See My Insights</button>
+  </div>
+</main>
+
+<script>
+  const TOTAL_DURATION = 25000; // 25s
+  const cards = [
+    { id: 'card-0', label: 'Loading financial joy…' },
+    { id: 'card-1', label: 'Loading confidence…' },
+    { id: 'card-2', label: 'Loading outlook…' },
+    { id: 'card-3', label: 'Bringing in vision of the future…' },
+    { id: 'card-4', label: 'Adding in goals…' },
+    { id: 'card-5', label: 'Generating your financial profile…' },
+  ];
+  const N = cards.length;
+  // Each card gets roughly equal time but last one finishes at 100%
+  const cardDuration = TOTAL_DURATION / N;
+
+  const globalBar = document.getElementById('globalBar');
+  const statusText = document.getElementById('statusText');
+  const pctLabel = document.getElementById('pctLabel');
+  const finalMsg = document.getElementById('finalMsg');
+
+  let startTime = null;
+  let activeIdx = 0;
+
+  // Activate first card immediately
+  document.getElementById(cards[0].id).classList.add('active');
+  statusText.textContent = cards[0].label;
+
+  function tick(ts) {
+    if (!startTime) startTime = ts;
+    const elapsed = ts - startTime;
+    const rawPct = Math.min(elapsed / TOTAL_DURATION, 1);
+    const displayPct = Math.round(rawPct * 100);
+
+    globalBar.style.width = displayPct + '%';
+    pctLabel.textContent = displayPct + '%';
+
+    // Which card should be active?
+    const targetIdx = Math.min(Math.floor(elapsed / cardDuration), N - 1);
+
+    if (targetIdx > activeIdx) {
+      // Complete previous cards
+      for (let i = activeIdx; i < targetIdx; i++) {
+        const el = document.getElementById(cards[i].id);
+        el.classList.remove('active');
+        el.classList.add('done');
+      }
+      // Activate new card
+      activeIdx = targetIdx;
+      document.getElementById(cards[activeIdx].id).classList.add('active');
+      statusText.textContent = cards[activeIdx].label;
+    }
+
+    if (rawPct < 1) {
+      requestAnimationFrame(tick);
+    } else {
+      // Done
+      document.getElementById(cards[N-1].id).classList.remove('active');
+      document.getElementById(cards[N-1].id).classList.add('done');
+      statusText.textContent = 'Your insights are ready!';
+      pctLabel.textContent = '100%';
+      finalMsg.classList.add('visible');
+    }
+  }
+
+  requestAnimationFrame(tick);
+</script>
+</body>
+</html>
