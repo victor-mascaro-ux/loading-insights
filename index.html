@@ -123,26 +123,42 @@
     position: relative;
     overflow: hidden;
   }
-  /* purple bottom accent bar — always present, just dimmed until active/done */
-  .card::after {
+  /* purple bottom accent bar — dimmed track, with a fill that loads left to right */
+  .card::before {
     content: '';
     position: absolute;
     bottom: 0; left: 0; right: 0;
-    height: 4px;
+    height: 6px;
     border-radius: 0 0 12px 12px;
     background: #4A1C96;
     opacity: 0.15;
-    transition: opacity 0.3s;
   }
+  .card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    height: 6px;
+    width: 0%;
+    border-radius: 0 0 12px 12px;
+    background: #4A1C96;
+  }
+  .card.active::after {
+    animation: barfill var(--card-dur, 4200ms) linear forwards;
+  }
+  .card.done::after { width: 100%; animation: none; }
+
+  @keyframes barfill {
+    from { width: 0%; }
+    to   { width: 100%; }
+  }
+
   .card.active {
     background: #fff;
     box-shadow: 0 2px 16px rgba(108, 99, 255, 0.12);
   }
-  .card.active::after { opacity: 1; }
   .card.done {
     background: #fff;
   }
-  .card.done::after { opacity: 1; }
 
   .card-icon {
     font-size: 28px;
@@ -408,6 +424,7 @@
   ];
   const N = cards.length;
   const cardDuration = TOTAL_DURATION / N;
+  document.documentElement.style.setProperty('--card-dur', cardDuration + 'ms');
 
   const globalBar = document.getElementById('globalBar');
   const statusText = document.getElementById('statusText');
