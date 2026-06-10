@@ -102,9 +102,6 @@
   /* CARDS WRAPPER */
   .cards-wrapper {
     width: 100%;
-    background: #F3F3F6;
-    border-radius: 20px;
-    padding: 20px;
     margin-bottom: 36px;
   }
 
@@ -117,50 +114,50 @@
   }
 
   .card {
-    background: #fff;
+    background: #F7F7FB;
     border-radius: 12px;
-    padding: 28px 28px 0;
+    padding: 20px 18px 24px;
     border: none;
-    box-shadow: 0 1px 5px rgba(30, 17, 69, 0.08);
-    transition: box-shadow 0.3s;
-    min-height: 190px;
+    transition: background 0.3s, box-shadow 0.3s;
+    min-height: 140px;
     position: relative;
-    display: flex;
-    flex-direction: column;
+    overflow: hidden;
   }
-
-  /* Purple bottom accent bar */
+  /* purple bottom accent bar — always present, just dimmed until active/done */
   .card::after {
     content: '';
-    display: block;
-    height: 6px;
-    border-radius: 99px;
-    background: transparent;
-    margin: auto -22px 0;
-    transform: translateY(3px);
-    transition: background 0.4s;
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 4px;
+    border-radius: 0 0 12px 12px;
+    background: #4A1C96;
+    opacity: 0.15;
+    transition: opacity 0.3s;
   }
-  .card.active::after { background: #5B21B6; }
-  .card.done::after   { background: #5B21B6; }
-
   .card.active {
-    box-shadow: 0 4px 18px rgba(91, 33, 182, 0.12);
+    background: #fff;
+    box-shadow: 0 2px 16px rgba(108, 99, 255, 0.12);
   }
+  .card.active::after { opacity: 1; }
+  .card.done {
+    background: #fff;
+  }
+  .card.done::after { opacity: 1; }
 
   .card-icon {
-    font-size: 34px;
-    margin-bottom: 18px;
+    font-size: 28px;
+    margin-bottom: 14px;
     display: block;
-    filter: grayscale(1) opacity(0.2);
+    filter: grayscale(1) opacity(0.25);
     transition: filter 0.4s;
   }
   .card.active .card-icon,
   .card.done .card-icon { filter: grayscale(0) opacity(1); }
 
   .card-title {
-    font-size: 20px;
-    font-weight: 600;
-    color: #ccc;
+    font-size: 14px;
+    font-weight: 700;
+    color: #bbb;
     margin-bottom: 8px;
     transition: color 0.3s;
   }
@@ -190,12 +187,11 @@
 
   /* Actual content — hidden until done */
   .card-body {
-    font-size: 15px;
+    font-size: 13px;
     font-weight: 400;
     color: #555;
-    line-height: 1.55;
+    line-height: 1.5;
     display: none;
-    margin-bottom: 22px;
   }
   .card.done .card-body { display: block; }
   .card.done .skeleton-wrap { display: none; }
