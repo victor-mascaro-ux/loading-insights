@@ -26,12 +26,27 @@
     padding: 0 28px;
     height: 56px;
     flex-shrink: 0;
+    position: relative;
   }
-  nav .brand { display: flex; align-items: center; gap: 8px; color: #fff; font-weight: 800; font-size: 17px; }
-  nav .brand svg { width: 26px; height: 26px; }
-  nav .org { color: #fff; font-size: 14px; font-weight: 700; letter-spacing: 0.08em; position: absolute; left: 50%; transform: translateX(-50%); }
-  nav { position: relative; }
-  nav .hamburger { display: flex; flex-direction: column; justify-content: center; gap: 5px; width: 32px; height: 32px; cursor: pointer; }
+  nav .brand { display: flex; align-items: center; }
+  nav .org {
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  nav .hamburger {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+  }
   nav .hamburger span { display: block; height: 2px; background: #fff; border-radius: 2px; width: 100%; }
 
   /* MAIN */
@@ -48,17 +63,17 @@
 
   h1 {
     font-size: clamp(24px, 4vw, 36px);
-    font-weight: 800;
+    font-weight: 600;
     color: #1E1145;
     text-align: center;
-    line-height: 1.25;
+    line-height: 1.3;
     margin-bottom: 48px;
   }
 
   /* GLOBAL PROGRESS BAR */
   .global-progress-wrap {
     width: 100%;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
   }
   .global-bar-track {
     width: 100%;
@@ -78,15 +93,16 @@
     display: flex;
     justify-content: space-between;
     margin-top: 8px;
-    font-size: 13px;
+    font-size: 12px;
+    font-weight: 500;
     color: #999;
   }
-  .global-label .status-text { color: #1E1145; font-weight: 700; }
+  .global-label .status-text { color: #1E1145; font-weight: 600; }
 
   /* CARDS WRAPPER */
   .cards-wrapper {
     width: 100%;
-    background: #F4F4F7;
+    background: #F3F3F6;
     border-radius: 20px;
     padding: 20px;
     margin-bottom: 36px;
@@ -102,11 +118,12 @@
 
   .card {
     background: #fff;
-    border-radius: 14px;
-    padding: 20px 16px 0;
-    border: 1.5px solid #E8E4F0;
-    transition: border-color 0.3s, box-shadow 0.3s;
-    min-height: 140px;
+    border-radius: 16px;
+    padding: 26px 24px 0;
+    border: none;
+    box-shadow: 0 1px 4px rgba(30, 17, 69, 0.06);
+    transition: box-shadow 0.3s;
+    min-height: 170px;
     position: relative;
     overflow: hidden;
     display: flex;
@@ -117,58 +134,51 @@
   .card::after {
     content: '';
     display: block;
-    height: 4px;
-    background: #E8E4F0;
-    border-radius: 0 0 14px 14px;
+    height: 6px;
+    background: transparent;
     margin-top: auto;
     transition: background 0.4s;
   }
-  .card.active::after { background: linear-gradient(90deg, #7C3AED, #1E1145); }
-  .card.done::after  { background: #1E1145; }
+  .card.active::after { background: #5B21B6; }
+  .card.done::after   { background: #5B21B6; }
 
   .card.active {
-    border-color: #C4B5FD;
-    box-shadow: 0 4px 18px rgba(124, 58, 237, 0.1);
-  }
-  .card.done {
-    border-color: #C4B5FD;
+    box-shadow: 0 4px 18px rgba(91, 33, 182, 0.12);
   }
 
   .card-icon {
-    font-size: 26px;
-    margin-bottom: 10px;
+    font-size: 30px;
+    margin-bottom: 14px;
     display: block;
-    filter: grayscale(1) opacity(0.25);
+    filter: grayscale(1) opacity(0.2);
     transition: filter 0.4s;
   }
   .card.active .card-icon,
   .card.done .card-icon { filter: grayscale(0) opacity(1); }
 
   .card-title {
-    font-size: 14px;
-    font-weight: 700;
-    color: #bbb;
-    margin-bottom: 10px;
+    font-size: 17px;
+    font-weight: 600;
+    color: #ccc;
+    margin-bottom: 8px;
     transition: color 0.3s;
   }
   .card.active .card-title,
-  .card.done .card-title { color: #1E1145; }
+  .card.done .card-title { color: #1a1a2e; }
 
   /* Skeleton lines */
+  .skeleton-wrap { flex: 1; }
   .skeleton-line {
     height: 8px;
     border-radius: 4px;
     background: #EBEBF5;
     margin-bottom: 6px;
+    transition: opacity 0.3s;
   }
   .card.active .skeleton-line {
     background: linear-gradient(90deg, #ede9f8 25%, #d8d0f2 50%, #ede9f8 75%);
     background-size: 200% 100%;
     animation: shimmer 1.2s infinite;
-  }
-  .card.done .skeleton-line {
-    background: #EBEBF5;
-    animation: none;
   }
   .skeleton-line.short { width: 60%; }
 
@@ -176,6 +186,18 @@
     0%   { background-position: 200% 0; }
     100% { background-position: -200% 0; }
   }
+
+  /* Actual content — hidden until done */
+  .card-body {
+    font-size: 14px;
+    font-weight: 400;
+    color: #5a5a6e;
+    line-height: 1.55;
+    display: none;
+    margin-bottom: 16px;
+  }
+  .card.done .card-body { display: block; }
+  .card.done .skeleton-wrap { display: none; }
 
   /* check mark */
   .check {
@@ -206,6 +228,20 @@
   .card.active .spinner { opacity: 1; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
+  /* SARAH HEADING — shown when done */
+  .insights-heading {
+    width: 100%;
+    text-align: left;
+    font-size: clamp(20px, 3vw, 28px);
+    font-weight: 400;
+    color: #1a1a2e;
+    margin-bottom: 20px;
+    display: none;
+  }
+  .insights-heading strong { font-weight: 700; }
+  body.complete .insights-heading { display: block; }
+  body.complete .global-progress-wrap { display: none; }
+
   /* FINAL MESSAGE */
   .final-msg {
     text-align: center;
@@ -215,15 +251,15 @@
     pointer-events: none;
   }
   .final-msg.visible { opacity: 1; transform: translateY(0); pointer-events: all; }
-  .final-msg p { color: #555; font-size: 15px; margin-bottom: 24px; }
+  .final-msg p { color: #555; font-size: 15px; font-weight: 400; margin-bottom: 24px; }
 
   .btn-continue {
     display: inline-block;
     background: #1E1145;
     color: #fff;
     font-family: 'Poppins', sans-serif;
-    font-size: 17px;
-    font-weight: 700;
+    font-size: 16px;
+    font-weight: 600;
     padding: 16px 56px;
     border-radius: 99px;
     border: none;
@@ -238,7 +274,7 @@
 <!-- NAV -->
 <nav>
   <div class="brand">
-    <svg height="22" viewBox="0 0 1702 288" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg height="20" viewBox="0 0 1702 288" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M165.378 198.685C164.99 198.685 164.537 198.685 164.149 198.62C110.711 192.518 93.0496 170.8 87.2917 158.466C78.8167 140.224 83.2159 121.394 98.5487 110.372C112.523 100.333 130.766 101.12 141.895 112.274C146.229 116.605 146.294 123.757 142.024 128.152C137.753 132.548 130.703 132.614 126.367 128.283C122.356 124.281 115.757 125.462 111.358 128.677C108.318 130.843 101.913 137.206 107.347 148.886C110.258 155.119 121.063 169.62 159.815 175.393C180.064 141.34 175.859 123.691 173.012 117.458C170.619 112.34 167.319 109.125 163.179 107.813C159.298 106.632 154.704 107.222 150.951 109.453C145.711 112.602 138.918 110.831 135.813 105.516C132.707 100.202 134.455 93.3125 139.695 90.1632C148.817 84.6517 159.815 83.2739 169.648 86.3577C176.764 88.5885 186.598 94.0998 193.003 107.878C198.761 120.279 204.066 147.836 174.695 193.567C172.624 196.783 169.13 198.685 165.443 198.685H165.378Z" fill="white"/>
       <path d="M182.923 284.948C177.554 284.948 172.572 281.405 170.89 275.893C168.884 269.136 172.636 261.984 179.235 259.95C221.093 246.959 252.6 211.922 261.398 168.487C267.803 136.796 261.656 104.515 244.124 77.5489C226.592 50.5825 199.744 32.1456 168.496 25.5844C161.703 24.1409 157.304 17.383 158.727 10.4937C160.151 3.60443 166.75 -0.85719 173.607 0.586272C211.389 8.45969 243.93 30.8333 265.15 63.508C286.37 96.1828 293.81 135.288 286.046 173.67C275.372 226.291 237.266 268.742 186.611 284.423C185.382 284.816 184.152 285.014 182.923 285.014V284.948Z" fill="white"/>
       <path d="M117.96 288C117.119 288 116.278 287.934 115.437 287.737C77.6551 279.864 45.1137 257.556 23.8938 224.815C2.67386 192.142 -4.76604 153.036 2.99733 114.653C14.7718 56.39 59.6054 11.446 117.184 0.226364C124.041 -1.08587 130.64 3.4413 131.935 10.3305C133.228 17.2854 128.764 23.9778 121.971 25.2901C74.4204 34.6069 37.415 71.6777 27.6461 119.837C21.2413 151.528 27.3872 183.809 44.9196 210.775C62.4518 237.742 89.3002 256.178 120.547 262.739C127.341 264.182 131.741 270.941 130.317 277.83C129.088 283.866 123.847 288 118.025 288H117.96Z" fill="white"/>
@@ -276,60 +312,80 @@
     </div>
   </div>
 
+  <h2 class="insights-heading">Sarah, here are your <strong>Personal Insights</strong>:</h2>
+
   <!-- CARDS GRID -->
   <div class="cards-wrapper">
     <div class="cards-grid" id="cardsGrid">
 
       <div class="card" id="card-0">
-        <span class="card-icon">😊</span>
-        <div class="card-title">Financial Joy</div>
-        <div class="skeleton-line"></div>
-        <div class="skeleton-line short"></div>
+        <span class="card-icon">🛡️</span>
+        <div class="card-title">Core Values</div>
+        <div class="skeleton-wrap">
+          <div class="skeleton-line"></div>
+          <div class="skeleton-line short"></div>
+        </div>
+        <p class="card-body">Security, independence, simplicity, and connection</p>
         <div class="spinner"></div>
         <div class="check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
       </div>
 
       <div class="card" id="card-1">
-        <span class="card-icon">🛡️</span>
-        <div class="card-title">Confidence</div>
-        <div class="skeleton-line"></div>
-        <div class="skeleton-line short"></div>
+        <span class="card-icon">✨</span>
+        <div class="card-title">Joy Source</div>
+        <div class="skeleton-wrap">
+          <div class="skeleton-line"></div>
+          <div class="skeleton-line short"></div>
+        </div>
+        <p class="card-body">Time with my husband and cultural experiences like theater</p>
         <div class="spinner"></div>
         <div class="check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
       </div>
 
       <div class="card" id="card-2">
-        <span class="card-icon">🌤️</span>
-        <div class="card-title">Outlook</div>
-        <div class="skeleton-line"></div>
-        <div class="skeleton-line short"></div>
+        <span class="card-icon">⚠️</span>
+        <div class="card-title">Biggest Concern</div>
+        <div class="skeleton-wrap">
+          <div class="skeleton-line"></div>
+          <div class="skeleton-line short"></div>
+        </div>
+        <p class="card-body">Preparing for future health outcomes for myself and Vic</p>
         <div class="spinner"></div>
         <div class="check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
       </div>
 
       <div class="card" id="card-3">
-        <span class="card-icon">🔭</span>
-        <div class="card-title">Vision of the Future</div>
-        <div class="skeleton-line"></div>
-        <div class="skeleton-line short"></div>
+        <span class="card-icon">🎯</span>
+        <div class="card-title">Hopes</div>
+        <div class="skeleton-wrap">
+          <div class="skeleton-line"></div>
+          <div class="skeleton-line short"></div>
+        </div>
+        <p class="card-body">Having the strength to manage it all and seeing Vic's health improve</p>
         <div class="spinner"></div>
         <div class="check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
       </div>
 
       <div class="card" id="card-4">
-        <span class="card-icon">🎯</span>
-        <div class="card-title">Goals</div>
-        <div class="skeleton-line"></div>
-        <div class="skeleton-line short"></div>
+        <span class="card-icon">🗺️</span>
+        <div class="card-title">Lifestyle Aspiration</div>
+        <div class="skeleton-wrap">
+          <div class="skeleton-line"></div>
+          <div class="skeleton-line short"></div>
+        </div>
+        <p class="card-body">Living near family with the freedom to travel, connect, and enjoy meaningful experiences</p>
         <div class="spinner"></div>
         <div class="check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
       </div>
 
       <div class="card" id="card-5">
         <span class="card-icon">⚡</span>
-        <div class="card-title">Financial Profile</div>
-        <div class="skeleton-line"></div>
-        <div class="skeleton-line short"></div>
+        <div class="card-title">Future Vision</div>
+        <div class="skeleton-wrap">
+          <div class="skeleton-line"></div>
+          <div class="skeleton-line short"></div>
+        </div>
+        <p class="card-body">Near loved ones, traveling, and staying active with family in the years ahead</p>
         <div class="spinner"></div>
         <div class="check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
       </div>
@@ -339,20 +395,19 @@
 
   <!-- FINAL CTA -->
   <div class="final-msg" id="finalMsg">
-    <p>Your Personal Insights are ready. 🎉</p>
-    <button class="btn-continue">See My Insights</button>
+    <button class="btn-continue">Continue</button>
   </div>
 </main>
 
 <script>
   const TOTAL_DURATION = 25000;
   const cards = [
-    { id: 'card-0', label: 'Loading financial joy…' },
-    { id: 'card-1', label: 'Loading confidence…' },
-    { id: 'card-2', label: 'Loading outlook…' },
-    { id: 'card-3', label: 'Bringing in vision of the future…' },
-    { id: 'card-4', label: 'Adding in goals…' },
-    { id: 'card-5', label: 'Generating your financial profile…' },
+    { id: 'card-0', label: 'Loading core values…' },
+    { id: 'card-1', label: 'Finding your joy source…' },
+    { id: 'card-2', label: 'Identifying biggest concern…' },
+    { id: 'card-3', label: 'Uncovering your hopes…' },
+    { id: 'card-4', label: 'Mapping lifestyle aspirations…' },
+    { id: 'card-5', label: 'Building future vision…' },
   ];
   const N = cards.length;
   const cardDuration = TOTAL_DURATION / N;
@@ -397,6 +452,7 @@
       document.getElementById(cards[N-1].id).classList.add('done');
       statusText.textContent = 'Your insights are ready!';
       pctLabel.textContent = '100%';
+      document.body.classList.add('complete');
       finalMsg.classList.add('visible');
     }
   }
