@@ -55,208 +55,162 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 48px 24px 40px;
-    max-width: 1100px;
+    padding: 36px 24px 40px;
+    max-width: 720px;
     margin: 0 auto;
     width: 100%;
   }
 
-  h1 {
-    font-size: clamp(24px, 4vw, 36px);
-    font-weight: 600;
-    color: #1E1145;
-    text-align: center;
-    line-height: 1.3;
-    margin-bottom: 48px;
-  }
-
-  /* GLOBAL PROGRESS BAR */
-  .global-progress-wrap {
-    width: 100%;
-    margin-bottom: 12px;
-  }
-  .global-bar-track {
-    width: 100%;
-    height: 7px;
-    background: #E8E4F0;
-    border-radius: 99px;
-    overflow: hidden;
-  }
-  .global-bar-fill {
-    height: 100%;
-    width: 0%;
-    background: linear-gradient(90deg, #1E1145, #7C3AED);
-    border-radius: 99px;
-    transition: width 0.4s ease;
-  }
-  .global-label {
+  /* ── SECONDARY PROGRESS (small spinner + global %) ── */
+  .progress-strip {
     display: flex;
-    justify-content: space-between;
-    margin-top: 8px;
-    font-size: 12px;
-    font-weight: 500;
-    color: #999;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 30px;
   }
-  .global-label .status-text { color: #1E1145; font-weight: 600; }
-
-  /* CARDS WRAPPER */
-  .cards-wrapper {
-    width: 100%;
-    margin-bottom: 36px;
+  .mini-ring { position: relative; width: 46px; height: 46px; flex-shrink: 0; }
+  .mini-ring svg { transform: rotate(-90deg); }
+  .mini-track { fill: none; stroke: #E8E4F0; stroke-width: 5; }
+  .mini-fill {
+    fill: none;
+    stroke: url(#miniGrad);
+    stroke-width: 5;
+    stroke-linecap: round;
+    stroke-dasharray: 119.4;  /* 2πr, r=19 */
+    stroke-dashoffset: 119.4;
+    transition: stroke-dashoffset 0.3s linear;
   }
-
-  /* CARDS GRID */
-  .cards-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
-    width: 100%;
-  }
-
-  .card {
-    background: #F7F7FB;
-    border-radius: 12px;
-    padding: 20px 18px 24px;
-    border: none;
-    transition: background 0.3s, box-shadow 0.3s;
-    min-height: 140px;
-    position: relative;
-    overflow: hidden;
-  }
-  /* purple bottom accent bar — dimmed track, with a fill that loads left to right */
-  .card::before {
-    content: '';
+  /* the rotating spinner accent, carried over from the loading ring */
+  .mini-spin {
     position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 6px;
-    border-radius: 0 0 12px 12px;
-    background: #4A1C96;
-    opacity: 0.15;
-  }
-  .card::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 0;
-    height: 6px;
-    width: 0%;
-    border-radius: 0 0 12px 12px;
-    background: #4A1C96;
-  }
-  .card.active::after {
-    animation: barfill var(--card-dur, 4200ms) linear forwards;
-  }
-  .card.done::after { width: 100%; animation: none; }
-
-  @keyframes barfill {
-    from { width: 0%; }
-    to   { width: 100%; }
-  }
-
-  .card.active {
-    background: #fff;
-    box-shadow: 0 2px 16px rgba(108, 99, 255, 0.12);
-  }
-  .card.done {
-    background: #fff;
-  }
-
-  .card-icon {
-    font-size: 28px;
-    margin-bottom: 14px;
-    display: block;
-    filter: grayscale(1) opacity(0.25);
-    transition: filter 0.4s;
-  }
-  .card.active .card-icon,
-  .card.done .card-icon { filter: grayscale(0) opacity(1); }
-
-  .card-title {
-    font-size: 14px;
-    font-weight: 700;
-    color: #bbb;
-    margin-bottom: 8px;
-    transition: color 0.3s;
-  }
-  .card.active .card-title,
-  .card.done .card-title { color: #1a1a2e; }
-
-  /* Skeleton lines */
-  .skeleton-wrap { flex: 1; }
-  .skeleton-line {
-    height: 8px;
-    border-radius: 4px;
-    background: #EBEBF5;
-    margin-bottom: 6px;
-    transition: opacity 0.3s;
-  }
-  .card.active .skeleton-line {
-    background: linear-gradient(90deg, #ede9f8 25%, #d8d0f2 50%, #ede9f8 75%);
-    background-size: 200% 100%;
-    animation: shimmer 1.2s infinite;
-  }
-  .skeleton-line.short { width: 60%; }
-
-  @keyframes shimmer {
-    0%   { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
-  }
-
-  /* Actual content — hidden until done */
-  .card-body {
-    font-size: 13px;
-    font-weight: 400;
-    color: #555;
-    line-height: 1.5;
-    display: none;
-  }
-  .card.done .card-body { display: block; }
-  .card.done .skeleton-wrap { display: none; }
-
-  /* check mark */
-  .check {
-    position: absolute;
-    top: 14px; right: 14px;
-    width: 22px; height: 22px;
+    inset: 0;
     border-radius: 50%;
-    background: #1E1145;
-    display: flex; align-items: center; justify-content: center;
-    opacity: 0;
-    transform: scale(0.5);
-    transition: opacity 0.3s, transform 0.3s;
-  }
-  .card.done .check { opacity: 1; transform: scale(1); }
-  .check svg { width: 12px; height: 12px; stroke: #fff; fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
-
-  /* spinner ring on active card */
-  .spinner {
-    position: absolute;
-    top: 14px; right: 14px;
-    width: 22px; height: 22px;
-    border: 2.5px solid #E8E4F0;
-    border-top-color: #7C3AED;
-    border-radius: 50%;
-    opacity: 0;
+    border: 2px solid transparent;
+    border-top-color: rgba(124,58,237,0.55);
     animation: spin 0.9s linear infinite;
   }
-  .card.active .spinner { opacity: 1; }
+  body.complete .mini-spin { display: none; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* SARAH HEADING — shown when done */
-  .insights-heading {
-    width: 100%;
-    text-align: left;
-    font-size: clamp(20px, 3vw, 28px);
-    font-weight: 400;
-    color: #1a1a2e;
-    margin-bottom: 20px;
-    display: none;
+  .progress-meta { display: flex; flex-direction: column; line-height: 1.3; }
+  .progress-meta .pm-top {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1E1145;
   }
-  .insights-heading strong { font-weight: 700; }
-  body.complete .insights-heading { display: block; }
-  body.complete .global-progress-wrap { display: none; }
+  .progress-meta .pm-sub {
+    font-size: 12px;
+    font-weight: 500;
+    color: #9b9bb0;
+  }
 
-  /* FINAL MESSAGE */
+  /* ── HERO EDUCATIONAL CARD ── */
+  .edu-card {
+    width: 100%;
+    background: #fff;
+    border: 1px solid #ECE9F4;
+    border-radius: 22px;
+    box-shadow: 0 10px 40px rgba(30, 17, 69, 0.07);
+    padding: 40px 44px;
+    position: relative;
+    overflow: hidden;
+    min-height: 340px;
+  }
+  /* top accent strip that fills as the current topic "loads" */
+  .edu-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 5px;
+    background: #ECE9F4;
+  }
+  .edu-card::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    height: 5px;
+    width: 0%;
+    background: linear-gradient(90deg, #1E1145, #7C3AED);
+  }
+  .edu-card.filling::after { animation: topfill var(--step-dur, 4200ms) linear forwards; }
+  .edu-card.done-fill::after { width: 100%; }
+  @keyframes topfill { from { width: 0%; } to { width: 100%; } }
+
+  .edu-inner { transition: opacity 0.35s ease, transform 0.35s ease; }
+  .edu-inner.swapping { opacity: 0; transform: translateY(8px); }
+
+  .edu-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #7C3AED;
+    margin-bottom: 18px;
+  }
+  .edu-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+  .edu-emoji { font-size: 40px; line-height: 1; }
+  .edu-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: #1E1145;
+  }
+  .edu-what {
+    font-size: 16px;
+    font-weight: 400;
+    color: #4a4a5e;
+    line-height: 1.6;
+    margin-bottom: 22px;
+  }
+  .edu-why {
+    background: #F6F3FD;
+    border-radius: 14px;
+    padding: 16px 18px;
+    border-left: 4px solid #7C3AED;
+  }
+  .edu-why-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #7C3AED;
+    margin-bottom: 6px;
+  }
+  .edu-why-text {
+    font-size: 15px;
+    font-weight: 400;
+    color: #3a2a5e;
+    line-height: 1.55;
+  }
+
+  /* ── PER-ITEM DOTS (de-emphasized) ── */
+  .dots {
+    display: flex;
+    gap: 10px;
+    margin-top: 26px;
+    justify-content: center;
+  }
+  .dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #E1DCEF;
+    transition: background 0.3s, transform 0.3s, width 0.3s, border-radius 0.3s;
+  }
+  .dot.active {
+    width: 26px;
+    border-radius: 99px;
+    background: #7C3AED;
+  }
+  .dot.done { background: #1E1145; }
+
+  /* ── FINAL CTA ── */
   .final-msg {
+    margin-top: 34px;
     text-align: center;
     opacity: 0;
     transform: translateY(10px);
@@ -264,7 +218,7 @@
     pointer-events: none;
   }
   .final-msg.visible { opacity: 1; transform: translateY(0); pointer-events: all; }
-  .final-msg p { color: #555; font-size: 15px; font-weight: 400; margin-bottom: 24px; }
+  .final-msg p { font-size: 15px; font-weight: 400; color: #555; margin-bottom: 20px; }
 
   .btn-continue {
     display: inline-block;
@@ -298,21 +252,15 @@
   .skip-link:hover { color: #7C3AED; }
   body.complete .skip-link { display: none; }
 
-  /* MOBILE — single column, emoji to the right of the title */
   @media (max-width: 640px) {
     nav { padding: 0 16px; }
     nav .brand svg { height: 14px; }
     nav .org { font-size: 11px; letter-spacing: 0.06em; }
-    .cards-grid { grid-template-columns: 1fr; }
-    .card { min-height: 0; padding: 18px 18px 22px; }
-    .card-icon {
-      display: inline;
-      font-size: 20px;
-      margin: 0 8px 0 0;
-      vertical-align: middle;
-    }
-    .card-title { display: inline; vertical-align: middle; }
-    .skeleton-wrap, .card-body { margin-top: 10px; }
+    main { padding: 28px 18px 36px; }
+    .edu-card { padding: 30px 24px; min-height: 0; }
+    .edu-title { font-size: 22px; }
+    .edu-emoji { font-size: 34px; }
+    .edu-what { font-size: 15px; }
   }
 </style>
 </head>
@@ -346,103 +294,51 @@
 </nav>
 
 <main>
-  <h1 id="pageTitle">Hang tight — we're building<br>your Personal Insights.</h1>
 
-  <!-- GLOBAL PROGRESS BAR -->
-  <div class="global-progress-wrap">
-    <div class="global-bar-track">
-      <div class="global-bar-fill" id="globalBar"></div>
+  <!-- SECONDARY PROGRESS: small spinner + global % -->
+  <div class="progress-strip">
+    <div class="mini-ring">
+      <svg width="46" height="46" viewBox="0 0 46 46">
+        <defs>
+          <linearGradient id="miniGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#1E1145"/>
+            <stop offset="100%" stop-color="#7C3AED"/>
+          </linearGradient>
+        </defs>
+        <circle class="mini-track" cx="23" cy="23" r="19"/>
+        <circle class="mini-fill" id="miniFill" cx="23" cy="23" r="19"/>
+      </svg>
+      <div class="mini-spin"></div>
     </div>
-    <div class="global-label">
-      <span class="status-text" id="statusText">Starting…</span>
-      <span id="pctLabel">0%</span>
+    <div class="progress-meta">
+      <span class="pm-top" id="pmTop">Building your Personal Insights</span>
+      <span class="pm-sub" id="pmSub">0% &middot; Step 1 of 6</span>
+    </div>
+  </div>
+
+  <!-- HERO EDUCATIONAL CARD -->
+  <div class="edu-card" id="eduCard">
+    <div class="edu-inner" id="eduInner">
+      <div class="edu-eyebrow" id="eduEyebrow">Now exploring</div>
+      <div class="edu-head">
+        <span class="edu-emoji" id="eduEmoji">😊</span>
+        <span class="edu-title" id="eduTitle">Your Financial Joy</span>
+      </div>
+      <p class="edu-what" id="eduWhat"></p>
+      <div class="edu-why">
+        <div class="edu-why-label">Why this matters</div>
+        <p class="edu-why-text" id="eduWhy"></p>
+      </div>
     </div>
   </div>
 
-  <h2 class="insights-heading">Sarah, here are your <strong>Personal Insights</strong>:</h2>
-
-  <!-- CARDS GRID -->
-  <div class="cards-wrapper">
-    <div class="cards-grid" id="cardsGrid">
-
-      <div class="card" id="card-0">
-        <span class="card-icon">🛡️</span>
-        <div class="card-title">Core Values</div>
-        <div class="skeleton-wrap">
-          <div class="skeleton-line"></div>
-          <div class="skeleton-line short"></div>
-        </div>
-        <p class="card-body">Security, independence, simplicity, and connection</p>
-        <div class="spinner"></div>
-        <div class="check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
-      </div>
-
-      <div class="card" id="card-1">
-        <span class="card-icon">✨</span>
-        <div class="card-title">Joy Source</div>
-        <div class="skeleton-wrap">
-          <div class="skeleton-line"></div>
-          <div class="skeleton-line short"></div>
-        </div>
-        <p class="card-body">Time with my husband and cultural experiences like theater</p>
-        <div class="spinner"></div>
-        <div class="check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
-      </div>
-
-      <div class="card" id="card-2">
-        <span class="card-icon">⚠️</span>
-        <div class="card-title">Biggest Concern</div>
-        <div class="skeleton-wrap">
-          <div class="skeleton-line"></div>
-          <div class="skeleton-line short"></div>
-        </div>
-        <p class="card-body">Preparing for future health outcomes for myself and Vic</p>
-        <div class="spinner"></div>
-        <div class="check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
-      </div>
-
-      <div class="card" id="card-3">
-        <span class="card-icon">🎯</span>
-        <div class="card-title">Hopes</div>
-        <div class="skeleton-wrap">
-          <div class="skeleton-line"></div>
-          <div class="skeleton-line short"></div>
-        </div>
-        <p class="card-body">Having the strength to manage it all and seeing Vic's health improve</p>
-        <div class="spinner"></div>
-        <div class="check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
-      </div>
-
-      <div class="card" id="card-4">
-        <span class="card-icon">🗺️</span>
-        <div class="card-title">Lifestyle Aspiration</div>
-        <div class="skeleton-wrap">
-          <div class="skeleton-line"></div>
-          <div class="skeleton-line short"></div>
-        </div>
-        <p class="card-body">Living near family with the freedom to travel, connect, and enjoy meaningful experiences</p>
-        <div class="spinner"></div>
-        <div class="check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
-      </div>
-
-      <div class="card" id="card-5">
-        <span class="card-icon">⚡</span>
-        <div class="card-title">Future Vision</div>
-        <div class="skeleton-wrap">
-          <div class="skeleton-line"></div>
-          <div class="skeleton-line short"></div>
-        </div>
-        <p class="card-body">Near loved ones, traveling, and staying active with family in the years ahead</p>
-        <div class="spinner"></div>
-        <div class="check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
-      </div>
-
-    </div>
-  </div>
+  <!-- PER-ITEM DOTS -->
+  <div class="dots" id="dots"></div>
 
   <!-- FINAL CTA -->
   <div class="final-msg" id="finalMsg">
-    <button class="btn-continue" onclick="window.location.href='version-c.html'">Continue</button>
+    <p>That's the thinking behind your Personal Insights. Ready to see them?</p>
+    <button class="btn-continue" onclick="window.location.href='index.html'">Continue</button>
   </div>
 
   <button class="skip-link" onclick="skipAhead()">Skip &rarr;</button>
@@ -450,22 +346,114 @@
 
 <script>
   const TOTAL_DURATION = 25000;
-  const cards = [
-    { id: 'card-0', label: 'Loading core values…' },
-    { id: 'card-1', label: 'Finding your joy source…' },
-    { id: 'card-2', label: 'Identifying biggest concern…' },
-    { id: 'card-3', label: 'Uncovering your hopes…' },
-    { id: 'card-4', label: 'Mapping lifestyle aspirations…' },
-    { id: 'card-5', label: 'Building future vision…' },
-  ];
-  const N = cards.length;
-  const cardDuration = TOTAL_DURATION / N;
-  document.documentElement.style.setProperty('--card-dur', cardDuration + 'ms');
 
-  const globalBar = document.getElementById('globalBar');
-  const statusText = document.getElementById('statusText');
-  const pctLabel = document.getElementById('pctLabel');
+  // Education-first content. Each topic teaches: what we're doing, what it is,
+  // and why it matters — tied back to the Welcome promise
+  // ("Wealth is about experiencing life fully", Personal Insights, 3 money questions).
+  const topics = [
+    {
+      emoji: '😊',
+      eyebrow: 'Now exploring · Financial Joy',
+      title: 'Your Financial Joy',
+      what: 'Financial joy is the positive feeling you get when your money supports the life you actually want — the experiences, people, and moments that matter most to you.',
+      why: 'Because wealth is about experiencing life fully. Knowing what brings you joy lets your plan serve your life, not the other way around.',
+    },
+    {
+      emoji: '🛡️',
+      eyebrow: 'Now exploring · Confidence',
+      title: 'Your Confidence',
+      what: 'Confidence is how secure and in-control you feel about your financial decisions and your ability to handle whatever comes next.',
+      why: 'Seeing where your confidence is strong — and where it wavers — helps you and your advisor focus on what will give you real peace of mind.',
+    },
+    {
+      emoji: '🌤️',
+      eyebrow: 'Now exploring · Outlook',
+      title: 'Your Outlook',
+      what: 'Your outlook is how you feel about the road ahead — optimistic, cautious, or somewhere in between.',
+      why: 'Your outlook quietly shapes the choices you make today. Naming it is the first step to turning worry into a plan you can act on.',
+    },
+    {
+      emoji: '🔭',
+      eyebrow: 'Now exploring · Vision of the Future',
+      title: 'Your Vision of the Future',
+      what: 'Your vision is the picture of the life you’re working toward — where you want to be, who you want around you, and how you want to spend your days.',
+      why: 'A clear vision is the foundation of every good plan. It’s what your money is really for.',
+    },
+    {
+      emoji: '🎯',
+      eyebrow: 'Now exploring · Goals',
+      title: 'Your Goals',
+      what: 'Goals are the concrete milestones that move you toward your vision — the things you want to achieve, protect, or experience along the way.',
+      why: 'Turning a vision into goals is how dreams become plans. These become the priorities you and your advisor build around.',
+    },
+    {
+      emoji: '⚡',
+      eyebrow: 'Final step · Financial Profile',
+      title: 'Your Financial Profile',
+      what: 'Now we bring it all together — your joy, confidence, outlook, vision, and goals — into one personalized summary that’s uniquely yours.',
+      why: 'This is the value of everything you shared: your Personal Insights, plus the 3 most important money questions to explore next.',
+    },
+  ];
+
+  const N = topics.length;
+  const stepDuration = TOTAL_DURATION / N;
+  document.documentElement.style.setProperty('--step-dur', stepDuration + 'ms');
+
+  const CIRCUMFERENCE = 119.4;
+  const miniFill = document.getElementById('miniFill');
+  const pmTop = document.getElementById('pmTop');
+  const pmSub = document.getElementById('pmSub');
+  const eduCard = document.getElementById('eduCard');
+  const eduInner = document.getElementById('eduInner');
+  const eduEyebrow = document.getElementById('eduEyebrow');
+  const eduEmoji = document.getElementById('eduEmoji');
+  const eduTitle = document.getElementById('eduTitle');
+  const eduWhat = document.getElementById('eduWhat');
+  const eduWhy = document.getElementById('eduWhy');
   const finalMsg = document.getElementById('finalMsg');
+  const dotsWrap = document.getElementById('dots');
+
+  // build dots
+  const dots = [];
+  for (let i = 0; i < N; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot';
+    dotsWrap.appendChild(d);
+    dots.push(d);
+  }
+
+  function renderTopic(i) {
+    eduEyebrow.textContent = topics[i].eyebrow;
+    eduEmoji.textContent = topics[i].emoji;
+    eduTitle.textContent = topics[i].title;
+    eduWhat.textContent = topics[i].what;
+    eduWhy.textContent = topics[i].why;
+  }
+
+  function setActiveTopic(i, fade) {
+    // restart the top accent fill animation
+    eduCard.classList.remove('filling');
+    void eduCard.offsetWidth;
+    eduCard.classList.add('filling');
+
+    // dots
+    dots.forEach((d, j) => {
+      d.classList.toggle('done', j < i);
+      d.classList.toggle('active', j === i);
+    });
+
+    pmSub.textContent = pmSub.dataset.pct + '% · Step ' + (i + 1) + ' of ' + N;
+
+    if (fade) {
+      eduInner.classList.add('swapping');
+      setTimeout(() => {
+        renderTopic(i);
+        eduInner.classList.remove('swapping');
+      }, 350);
+    } else {
+      renderTopic(i);
+    }
+  }
 
   let startTime = null;
   let activeIdx = 0;
@@ -474,8 +462,9 @@
   function skipAhead() { skipRequested = true; }
   document.addEventListener('keydown', e => { if (e.key === 'ArrowRight') skipAhead(); });
 
-  document.getElementById(cards[0].id).classList.add('active');
-  statusText.textContent = cards[0].label;
+  pmSub.dataset.pct = '0';
+  renderTopic(0);
+  setActiveTopic(0, false);
 
   function tick(ts) {
     if (!startTime) startTime = ts;
@@ -484,31 +473,26 @@
     const rawPct = Math.min(elapsed / TOTAL_DURATION, 1);
     const displayPct = Math.round(rawPct * 100);
 
-    globalBar.style.width = displayPct + '%';
-    pctLabel.textContent = displayPct + '%';
+    miniFill.style.strokeDashoffset = CIRCUMFERENCE * (1 - rawPct);
+    pmSub.dataset.pct = displayPct;
+    pmSub.textContent = displayPct + '% · Step ' + (activeIdx + 1) + ' of ' + N;
 
-    const targetIdx = Math.min(Math.floor(elapsed / cardDuration), N - 1);
+    const targetIdx = Math.min(Math.floor(elapsed / stepDuration), N - 1);
 
     if (targetIdx > activeIdx) {
-      for (let i = activeIdx; i < targetIdx; i++) {
-        const el = document.getElementById(cards[i].id);
-        el.classList.remove('active');
-        el.classList.add('done');
-      }
       activeIdx = targetIdx;
-      document.getElementById(cards[activeIdx].id).classList.add('active');
-      statusText.textContent = cards[activeIdx].label;
+      setActiveTopic(activeIdx, true);
     }
 
     if (rawPct < 1) {
       requestAnimationFrame(tick);
     } else {
-      document.getElementById(cards[N-1].id).classList.remove('active');
-      document.getElementById(cards[N-1].id).classList.add('done');
-      statusText.textContent = 'Your insights are ready!';
-      pctLabel.textContent = '100%';
+      dots.forEach(d => { d.classList.remove('active'); d.classList.add('done'); });
+      eduCard.classList.remove('filling');
+      eduCard.classList.add('done-fill');
+      pmTop.textContent = 'Your Personal Insights are ready';
+      pmSub.textContent = '100% · Complete';
       document.body.classList.add('complete');
-      document.getElementById('pageTitle').innerHTML = 'Congratulations, you’ve taken a meaningful step.';
       finalMsg.classList.add('visible');
     }
   }
