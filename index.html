@@ -49,184 +49,168 @@
   }
   nav .hamburger span { display: block; height: 2px; background: #fff; border-radius: 2px; width: 100%; }
 
-  /* MAIN — two-column: ring left, steps right */
+  /* MAIN */
   main {
     flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 48px 24px 40px;
-    max-width: 1000px;
+    padding: 36px 24px 40px;
+    max-width: 720px;
     margin: 0 auto;
     width: 100%;
   }
 
-  h1 {
-    font-size: clamp(24px, 4vw, 36px);
-    font-weight: 600;
-    color: #1E1145;
-    text-align: center;
-    line-height: 1.3;
-    margin-bottom: 12px;
-  }
-
-  .subtitle {
-    font-size: 15px;
-    font-weight: 400;
-    color: #666;
-    text-align: center;
-    margin-bottom: 44px;
-  }
-
-  .content-row {
+  /* ── SECONDARY PROGRESS (small spinner + global %) ── */
+  .progress-strip {
     display: flex;
     align-items: center;
-    gap: 64px;
-    width: 100%;
-    justify-content: center;
+    gap: 12px;
+    margin-bottom: 30px;
   }
-
-  /* CIRCULAR PROGRESS RING */
-  .ring-wrap {
-    position: relative;
-    width: 260px;
-    height: 260px;
-    flex-shrink: 0;
-  }
-  .ring-wrap svg { transform: rotate(-90deg); }
-  .ring-track { fill: none; stroke: #E8E4F0; stroke-width: 14; }
-  .ring-fill {
+  .mini-ring { position: relative; width: 46px; height: 46px; flex-shrink: 0; }
+  .mini-ring svg { transform: rotate(-90deg); }
+  .mini-track { fill: none; stroke: #E8E4F0; stroke-width: 5; }
+  .mini-fill {
     fill: none;
-    stroke: url(#ringGrad);
-    stroke-width: 14;
+    stroke: url(#miniGrad);
+    stroke-width: 5;
     stroke-linecap: round;
-    stroke-dasharray: 723.8;  /* 2πr, r=115.2 */
-    stroke-dashoffset: 723.8;
+    stroke-dasharray: 119.4;  /* 2πr, r=19 */
+    stroke-dashoffset: 119.4;
+    transition: stroke-dashoffset 0.3s linear;
   }
-  .ring-center {
+  /* the rotating spinner accent, carried over from the loading ring */
+  .mini-spin {
     position: absolute;
     inset: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    border-top-color: rgba(124,58,237,0.55);
+    animation: spin 0.9s linear infinite;
   }
-  .ring-pct {
-    font-size: 48px;
+  body.complete .mini-spin { display: none; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .progress-meta { display: flex; flex-direction: column; line-height: 1.3; }
+  .progress-meta .pm-top {
+    font-size: 13px;
     font-weight: 600;
     color: #1E1145;
-    line-height: 1;
   }
-  .ring-sub {
+  .progress-meta .pm-sub {
     font-size: 12px;
     font-weight: 500;
-    color: #999;
-    margin-top: 6px;
-    max-width: 140px;
+    color: #9b9bb0;
   }
 
-  /* STEP LIST */
-  .steps {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    min-width: 320px;
+  /* ── HERO EDUCATIONAL CARD ── */
+  .edu-card {
+    width: 100%;
+    background: #fff;
+    border: 1px solid #ECE9F4;
+    border-radius: 22px;
+    box-shadow: 0 10px 40px rgba(30, 17, 69, 0.07);
+    padding: 40px 44px;
+    position: relative;
+    overflow: hidden;
+    min-height: 340px;
   }
-  .step {
+  /* top accent strip that fills as the current topic "loads" */
+  .edu-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 5px;
+    background: #ECE9F4;
+  }
+  .edu-card::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    height: 5px;
+    width: 0%;
+    background: linear-gradient(90deg, #1E1145, #7C3AED);
+  }
+  .edu-card.filling::after { animation: topfill var(--step-dur, 4200ms) linear forwards; }
+  .edu-card.done-fill::after { width: 100%; }
+  @keyframes topfill { from { width: 0%; } to { width: 100%; } }
+
+  .edu-inner { transition: opacity 0.35s ease, transform 0.35s ease; }
+  .edu-inner.swapping { opacity: 0; transform: translateY(8px); }
+
+  .edu-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #7C3AED;
+    margin-bottom: 18px;
+  }
+  .edu-head {
     display: flex;
     align-items: center;
     gap: 14px;
-    padding: 9px 0;
-    position: relative;
+    margin-bottom: 18px;
   }
-  /* connector line */
-  .step:not(:last-child)::after {
-    content: '';
-    position: absolute;
-    left: 13px;
-    top: 36px;
-    width: 2px;
-    height: 16px;
-    background: #E8E4F0;
+  .edu-emoji { font-size: 40px; line-height: 1; }
+  .edu-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: #1E1145;
   }
-  .step.done:not(:last-child)::after { background: #5B21B6; }
-
-  .step-bullet {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    border: 2px solid #E8E4F0;
-    background: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    position: relative;
-    transition: border-color 0.3s, background 0.3s;
+  .edu-what {
+    font-size: 16px;
+    font-weight: 400;
+    color: #4a4a5e;
+    line-height: 1.8;
+    margin-bottom: 26px;
   }
-  .step-bullet svg { width: 13px; height: 13px; stroke: #fff; fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; opacity: 0; transition: opacity 0.2s; }
-  .step.done .step-bullet { background: #1E1145; border-color: #1E1145; }
-  .step.done .step-bullet svg { opacity: 1; }
-
-  /* spinner inside active bullet */
-  .step.active .step-bullet { border-color: #E8E4F0; }
-  .step.active .step-bullet::before {
-    content: '';
-    position: absolute;
-    inset: -2px;
-    border-radius: 50%;
-    border: 2px solid transparent;
-    border-top-color: #7C3AED;
-    animation: spin 0.9s linear infinite;
+  .edu-why {
+    background: #F6F3FD;
+    border-radius: 14px;
+    padding: 20px 22px;
+    border-left: 4px solid #7C3AED;
   }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  .step-label {
-    font-size: 15px;
-    font-weight: 500;
-    color: #bbb;
-    transition: color 0.3s;
-  }
-  .step.active .step-label { color: #1E1145; font-weight: 600; }
-  .step.done .step-label { color: #1E1145; }
-
-  .step-icon {
-    font-size: 18px;
-    filter: grayscale(1) opacity(0.3);
-    transition: filter 0.4s;
-  }
-  .step.active .step-icon,
-  .step.done .step-icon { filter: grayscale(0) opacity(1); }
-
-  /* EDUCATIONAL FACTS */
-  .fact-box {
-    margin-top: 44px;
-    max-width: 560px;
-    text-align: center;
-    min-height: 72px;
-  }
-  .fact-label {
+  .edu-why-label {
     font-size: 11px;
     font-weight: 700;
-    letter-spacing: 0.12em;
-    color: #7C3AED;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
-    margin-bottom: 8px;
+    color: #7C3AED;
+    margin-bottom: 10px;
   }
-  .fact-text {
+  .edu-why-text {
     font-size: 15px;
     font-weight: 400;
-    color: #555;
-    line-height: 1.6;
-    opacity: 1;
-    transition: opacity 0.4s;
+    color: #3a2a5e;
+    line-height: 1.8;
   }
-  .fact-text.fading { opacity: 0; }
 
-  /* FINAL CTA */
+  /* ── PER-ITEM DOTS (de-emphasized) ── */
+  .dots {
+    display: flex;
+    gap: 10px;
+    margin-top: 26px;
+    justify-content: center;
+  }
+  .dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #E1DCEF;
+    transition: background 0.3s, transform 0.3s, width 0.3s, border-radius 0.3s;
+  }
+  .dot.active {
+    width: 26px;
+    border-radius: 99px;
+    background: #7C3AED;
+  }
+  .dot.done { background: #1E1145; }
+
+  /* ── FINAL CTA ── */
   .final-msg {
-    margin-top: 32px;
+    margin-top: 34px;
     text-align: center;
     opacity: 0;
     transform: translateY(10px);
@@ -234,6 +218,7 @@
     pointer-events: none;
   }
   .final-msg.visible { opacity: 1; transform: translateY(0); pointer-events: all; }
+  .final-msg p { font-size: 15px; font-weight: 400; color: #555; margin-bottom: 20px; }
 
   .btn-continue {
     display: inline-block;
@@ -267,12 +252,15 @@
   .skip-link:hover { color: #7C3AED; }
   body.complete .skip-link { display: none; }
 
-  @media (max-width: 760px) {
+  @media (max-width: 640px) {
     nav { padding: 0 16px; }
     nav .brand svg { height: 14px; }
     nav .org { font-size: 11px; letter-spacing: 0.06em; }
-    .content-row { flex-direction: column; gap: 36px; }
-    .steps { min-width: 0; width: 100%; max-width: 360px; }
+    main { padding: 28px 18px 36px; }
+    .edu-card { padding: 30px 24px; min-height: 0; }
+    .edu-title { font-size: 22px; }
+    .edu-emoji { font-size: 34px; }
+    .edu-what { font-size: 15px; }
   }
 </style>
 </head>
@@ -306,73 +294,50 @@
 </nav>
 
 <main>
-  <h1 id="pageTitle">We're generating your Personal Insights…</h1>
-  <p class="subtitle">This takes about 25 seconds — here's what Knomee is building for you.</p>
 
-  <div class="content-row">
-
-    <!-- CIRCULAR GLOBAL PROGRESS -->
-    <div class="ring-wrap">
-      <svg width="260" height="260" viewBox="0 0 260 260">
+  <!-- SECONDARY PROGRESS: small spinner + global % -->
+  <div class="progress-strip">
+    <div class="mini-ring">
+      <svg width="46" height="46" viewBox="0 0 46 46">
         <defs>
-          <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <linearGradient id="miniGrad" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stop-color="#1E1145"/>
             <stop offset="100%" stop-color="#7C3AED"/>
           </linearGradient>
         </defs>
-        <circle class="ring-track" cx="130" cy="130" r="115.2"/>
-        <circle class="ring-fill" id="ringFill" cx="130" cy="130" r="115.2"/>
+        <circle class="mini-track" cx="23" cy="23" r="19"/>
+        <circle class="mini-fill" id="miniFill" cx="23" cy="23" r="19"/>
       </svg>
-      <div class="ring-center">
-        <div class="ring-pct" id="ringPct">0%</div>
-        <div class="ring-sub" id="ringSub">Starting…</div>
-      </div>
+      <div class="mini-spin"></div>
     </div>
-
-    <!-- STEP CHECKLIST -->
-    <div class="steps" id="steps">
-      <div class="step" id="step-0">
-        <div class="step-bullet"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
-        <span class="step-icon">😊</span>
-        <span class="step-label">Loading financial joy</span>
-      </div>
-      <div class="step" id="step-1">
-        <div class="step-bullet"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
-        <span class="step-icon">🛡️</span>
-        <span class="step-label">Loading confidence</span>
-      </div>
-      <div class="step" id="step-2">
-        <div class="step-bullet"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
-        <span class="step-icon">🌤️</span>
-        <span class="step-label">Loading outlook</span>
-      </div>
-      <div class="step" id="step-3">
-        <div class="step-bullet"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
-        <span class="step-icon">🔭</span>
-        <span class="step-label">Bringing in vision of the future</span>
-      </div>
-      <div class="step" id="step-4">
-        <div class="step-bullet"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
-        <span class="step-icon">🎯</span>
-        <span class="step-label">Adding in goals</span>
-      </div>
-      <div class="step" id="step-5">
-        <div class="step-bullet"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
-        <span class="step-icon">⚡</span>
-        <span class="step-label">Generating your financial profile</span>
-      </div>
+    <div class="progress-meta">
+      <span class="pm-top" id="pmTop">Building your Personal Insights</span>
+      <span class="pm-sub" id="pmSub">0% &middot; Step 1 of 6</span>
     </div>
-
   </div>
 
-  <!-- EDUCATIONAL ROTATING FACTS -->
-  <div class="fact-box">
-    <div class="fact-label">While you wait</div>
-    <p class="fact-text" id="factText">Knomee turns your answers into a personal financial story — not just numbers.</p>
+  <!-- HERO EDUCATIONAL CARD -->
+  <div class="edu-card" id="eduCard">
+    <div class="edu-inner" id="eduInner">
+      <div class="edu-eyebrow" id="eduEyebrow">Now exploring</div>
+      <div class="edu-head">
+        <span class="edu-emoji" id="eduEmoji">😊</span>
+        <span class="edu-title" id="eduTitle">Your Financial Joy</span>
+      </div>
+      <p class="edu-what" id="eduWhat"></p>
+      <div class="edu-why">
+        <div class="edu-why-label">Why this matters</div>
+        <p class="edu-why-text" id="eduWhy"></p>
+      </div>
+    </div>
   </div>
+
+  <!-- PER-ITEM DOTS -->
+  <div class="dots" id="dots"></div>
 
   <!-- FINAL CTA -->
   <div class="final-msg" id="finalMsg">
+    <p>That's the thinking behind your Personal Insights. Ready to see them?</p>
     <button class="btn-continue" onclick="window.location.href='version-a.html'">Continue</button>
   </div>
 
@@ -380,41 +345,115 @@
 </main>
 
 <script>
-  const TOTAL_DURATION = 25000;
-  const steps = [
-    { id: 'step-0', label: 'Loading financial joy…' },
-    { id: 'step-1', label: 'Loading confidence…' },
-    { id: 'step-2', label: 'Loading outlook…' },
-    { id: 'step-3', label: 'Bringing in vision of the future…' },
-    { id: 'step-4', label: 'Adding in goals…' },
-    { id: 'step-5', label: 'Generating your financial profile…' },
+  const TOTAL_DURATION = 36000;
+
+  // Education-first content. Each topic teaches: what we're doing, what it is,
+  // and why it matters — tied back to the Welcome promise
+  // ("Wealth is about experiencing life fully", Personal Insights, 3 money questions).
+  const topics = [
+    {
+      emoji: "😊",
+      eyebrow: "Now exploring · Financial Joy",
+      title: "Your Financial Joy",
+      what: "What makes money feel worth it to you — the experiences and moments that matter most.",
+      why: "Knowing your joy lets your plan serve your life, not the other way around.",
+    },
+    {
+      emoji: "🛡️",
+      eyebrow: "Now exploring · Confidence",
+      title: "Your Confidence",
+      what: "How secure and in-control you feel about your financial decisions.",
+      why: "It helps you and your advisor focus on what will give you real peace of mind.",
+    },
+    {
+      emoji: "🌤️",
+      eyebrow: "Now exploring · Outlook",
+      title: "Your Outlook",
+      what: "How you feel about the road ahead — optimistic, cautious, or somewhere in between.",
+      why: "Naming it is the first step to turning worry into a plan you can act on.",
+    },
+    {
+      emoji: "🔭",
+      eyebrow: "Now exploring · Vision of the Future",
+      title: "Your Vision of the Future",
+      what: "The life you're working toward — where you want to be and how you want to spend your days.",
+      why: "A clear vision is the foundation of every good plan.",
+    },
+    {
+      emoji: "🎯",
+      eyebrow: "Now exploring · Goals",
+      title: "Your Goals",
+      what: "The concrete milestones that move you toward your vision.",
+      why: "This is how dreams become plans — and priorities you and your advisor build around.",
+    },
+    {
+      emoji: "⚡",
+      eyebrow: "Final step · Financial Profile",
+      title: "Your Financial Profile",
+      what: "Bringing it all together into one personalized summary that's uniquely yours.",
+      why: "Your Personal Insights, plus the 3 most important money questions to explore next.",
+    },
   ];
-  const N = steps.length;
+
+  const N = topics.length;
   const stepDuration = TOTAL_DURATION / N;
+  document.documentElement.style.setProperty('--step-dur', stepDuration + 'ms');
 
-  const CIRCUMFERENCE = 723.8;
-  const ringFill = document.getElementById('ringFill');
-  const ringPct = document.getElementById('ringPct');
-  const ringSub = document.getElementById('ringSub');
+  const CIRCUMFERENCE = 119.4;
+  const miniFill = document.getElementById('miniFill');
+  const pmTop = document.getElementById('pmTop');
+  const pmSub = document.getElementById('pmSub');
+  const eduCard = document.getElementById('eduCard');
+  const eduInner = document.getElementById('eduInner');
+  const eduEyebrow = document.getElementById('eduEyebrow');
+  const eduEmoji = document.getElementById('eduEmoji');
+  const eduTitle = document.getElementById('eduTitle');
+  const eduWhat = document.getElementById('eduWhat');
+  const eduWhy = document.getElementById('eduWhy');
   const finalMsg = document.getElementById('finalMsg');
-  const factText = document.getElementById('factText');
+  const dotsWrap = document.getElementById('dots');
 
-  const facts = [
-    'Knomee turns your answers into a personal financial story — not just numbers.',
-    'Your Personal Insights help your advisor understand what truly matters to you.',
-    'Money decisions are emotional. Knomee captures the "why" behind your goals.',
-    'Everything you share stays private and is only used to personalize your experience.',
-    'Your profile evolves with you — you can revisit and refine it anytime.',
-  ];
-  let factIdx = 0;
-  setInterval(() => {
-    factText.classList.add('fading');
-    setTimeout(() => {
-      factIdx = (factIdx + 1) % facts.length;
-      factText.textContent = facts[factIdx];
-      factText.classList.remove('fading');
-    }, 400);
-  }, 5000);
+  // build dots
+  const dots = [];
+  for (let i = 0; i < N; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot';
+    dotsWrap.appendChild(d);
+    dots.push(d);
+  }
+
+  function renderTopic(i) {
+    eduEyebrow.textContent = topics[i].eyebrow;
+    eduEmoji.textContent = topics[i].emoji;
+    eduTitle.textContent = topics[i].title;
+    eduWhat.textContent = topics[i].what;
+    eduWhy.textContent = topics[i].why;
+  }
+
+  function setActiveTopic(i, fade) {
+    // restart the top accent fill animation
+    eduCard.classList.remove('filling');
+    void eduCard.offsetWidth;
+    eduCard.classList.add('filling');
+
+    // dots
+    dots.forEach((d, j) => {
+      d.classList.toggle('done', j < i);
+      d.classList.toggle('active', j === i);
+    });
+
+    pmSub.textContent = pmSub.dataset.pct + '% · Step ' + (i + 1) + ' of ' + N;
+
+    if (fade) {
+      eduInner.classList.add('swapping');
+      setTimeout(() => {
+        renderTopic(i);
+        eduInner.classList.remove('swapping');
+      }, 350);
+    } else {
+      renderTopic(i);
+    }
+  }
 
   let startTime = null;
   let activeIdx = 0;
@@ -423,8 +462,9 @@
   function skipAhead() { skipRequested = true; }
   document.addEventListener('keydown', e => { if (e.key === 'ArrowRight') skipAhead(); });
 
-  document.getElementById(steps[0].id).classList.add('active');
-  ringSub.textContent = steps[0].label;
+  pmSub.dataset.pct = '0';
+  renderTopic(0);
+  setActiveTopic(0, false);
 
   function tick(ts) {
     if (!startTime) startTime = ts;
@@ -433,31 +473,25 @@
     const rawPct = Math.min(elapsed / TOTAL_DURATION, 1);
     const displayPct = Math.round(rawPct * 100);
 
-    ringFill.style.strokeDashoffset = CIRCUMFERENCE * (1 - rawPct);
-    ringPct.textContent = displayPct + '%';
+    miniFill.style.strokeDashoffset = CIRCUMFERENCE * (1 - rawPct);
+    pmSub.dataset.pct = displayPct;
+    pmSub.textContent = displayPct + '% · Step ' + (activeIdx + 1) + ' of ' + N;
 
     const targetIdx = Math.min(Math.floor(elapsed / stepDuration), N - 1);
 
     if (targetIdx > activeIdx) {
-      for (let i = activeIdx; i < targetIdx; i++) {
-        const el = document.getElementById(steps[i].id);
-        el.classList.remove('active');
-        el.classList.add('done');
-      }
       activeIdx = targetIdx;
-      document.getElementById(steps[activeIdx].id).classList.add('active');
-      ringSub.textContent = steps[activeIdx].label;
+      setActiveTopic(activeIdx, true);
     }
 
     if (rawPct < 1) {
       requestAnimationFrame(tick);
     } else {
-      const last = document.getElementById(steps[N-1].id);
-      last.classList.remove('active');
-      last.classList.add('done');
-      ringSub.textContent = 'Ready!';
-      ringPct.textContent = '100%';
-      document.getElementById('pageTitle').textContent = 'Your Personal Insights are ready.';
+      dots.forEach(d => { d.classList.remove('active'); d.classList.add('done'); });
+      eduCard.classList.remove('filling');
+      eduCard.classList.add('done-fill');
+      pmTop.textContent = 'Your Personal Insights are ready';
+      pmSub.textContent = '100% · Complete';
       document.body.classList.add('complete');
       finalMsg.classList.add('visible');
     }
