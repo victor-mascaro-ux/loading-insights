@@ -345,7 +345,13 @@
 </main>
 
 <script>
-  const TOTAL_DURATION = 36000;
+  const STEP_DURATIONS = [4000, 4000, 4000, 4000, 4000, 5000];
+  const TOTAL_DURATION = STEP_DURATIONS.reduce((a, b) => a + b, 0); // 25000
+
+  // Cumulative start time for each step
+  const STEP_STARTS = STEP_DURATIONS.map((_, i) =>
+    STEP_DURATIONS.slice(0, i).reduce((a, b) => a + b, 0)
+  );
 
   // Education-first content. Each topic teaches: what we're doing, what it is,
   // and why it matters — tied back to the Welcome promise
@@ -396,8 +402,6 @@
   ];
 
   const N = topics.length;
-  const stepDuration = TOTAL_DURATION / N;
-  document.documentElement.style.setProperty('--step-dur', stepDuration + 'ms');
 
   const CIRCUMFERENCE = 119.4;
   const miniFill = document.getElementById('miniFill');
@@ -431,6 +435,9 @@
   }
 
   function setActiveTopic(i, fade) {
+    // update fill animation duration for this step
+    document.documentElement.style.setProperty('--step-dur', STEP_DURATIONS[i] + 'ms');
+
     // restart the top accent fill animation
     eduCard.classList.remove('filling');
     void eduCard.offsetWidth;
@@ -477,7 +484,10 @@
     pmSub.dataset.pct = displayPct;
     pmSub.textContent = displayPct + '% · Step ' + (activeIdx + 1) + ' of ' + N;
 
-    const targetIdx = Math.min(Math.floor(elapsed / stepDuration), N - 1);
+    let targetIdx = N - 1;
+    for (let i = N - 1; i >= 0; i--) {
+      if (elapsed >= STEP_STARTS[i]) { targetIdx = i; break; }
+    }
 
     if (targetIdx > activeIdx) {
       activeIdx = targetIdx;
